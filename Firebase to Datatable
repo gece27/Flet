@@ -1,0 +1,56 @@
+import flet as ft
+from flet import Page
+
+from firebase import firebase
+
+firebase=firebase.FirebaseApplication('https://fir-51840-default-rtdb.firebaseio.com/',None)
+
+def main(page: ft.Page):
+    page.window_width=400
+    page.window_height=400
+
+    page.title="firebase->datatable"
+    page.theme_mode = ft.ThemeMode.LIGHT
+    page.vertical_alignment = "center"
+    page.horizontal_alignment="center"
+
+    data=firebase.get('Users','') # key,value halde getiren
+    
+    def gstr(e):
+        print(e.control.data.value)
+
+    datatable=ft.DataTable(
+            #bgcolor="cyan",
+            heading_row_color="#7DE3E7",
+            data_row_color="#DFE0D8",
+            columns=[
+                ft.DataColumn(ft.Text(" id")),
+                ft.DataColumn(ft.Text(" ad")),
+                ft.DataColumn(ft.Text("soyad")),
+                ft.DataColumn(ft.Text("şifre")),
+                ft.DataColumn(ft.Text("veri okuma",text_align="center")),
+            ],
+            rows=[]
+            )
+    #id 
+    z=0
+    for x in  data:
+        z+=1
+        datatable.rows.append(
+         ft.DataRow(
+            cells=[
+                ft.DataCell(ft.Text(z) ),
+                ft.DataCell(ft.Text(x["age"]) ),
+                ft.DataCell(ft.Text(x["name"])),
+                ft.DataCell(ft.Text(x["password"])),
+                ft.DataCell( ft.ElevatedButton("göster",data=ft.Text(f' {x["age"]},{x["name"]},{x["password"]} ') ,on_click=gstr )   )
+            ]
+         )   
+        )
+           
+    page.add(datatable)
+    page.update()
+
+ft.app(target=main)
+
+"""  """
