@@ -1,0 +1,97 @@
+import flet as ft
+from flet import *
+
+def main(page: ft.Page):
+    page.title = "NavigationBar"
+    page.window_width=400
+    page.window_height=400
+    page.theme_mode = ThemeMode.LIGHT
+    page.vertical_alignment = "center"
+    page.horizontal_alignment="center"
+
+    def x(e):
+        if e.control.selected_index==0:
+            page.go("/bir")
+        if e.control.selected_index==1:
+            page.go("/iki")
+    
+
+    def route_change(route):
+        page.views.clear()
+
+        page.views.append(
+            #1
+            View(
+                "/bir",
+                [
+                    
+                    NavigationBar(
+                        destinations=[
+                            NavigationDestination(icon=icons.EXPLORE, label="Explore"),
+                            NavigationDestination(icon=icons.COMMUTE, label="Commute")
+                            
+                        ],
+                        #
+                        bgcolor="#C4A128",
+                        selected_index=0,
+                        on_change=x
+                        ),
+                    
+                    
+                    Stack(
+                            [
+                             Text("birinci sayfa",top=40, left=145) 
+                            ]
+                           
+                        )
+
+                ],
+            )
+        )
+        #2
+        if page.route == "/iki":
+            page.views.append(
+                ft.View(
+                    "/iki",
+                    [
+                       NavigationBar(
+        
+                        destinations=[
+                            NavigationDestination(icon=icons.EXPLORE, label="Explore"),
+                            NavigationDestination(icon=icons.COMMUTE, label="Commute")
+                            
+                        ],
+                        #
+                        bgcolor="#C4A128",
+                        selected_index=0,
+                        on_change=x
+
+                        ),
+
+                    Stack(
+                            [Image(src="gece.jpg",width=300,height=300)]
+                        )       
+                    
+                    ],
+                )
+            )
+       
+        
+        page.update()
+
+
+    def view_pop(view):
+        page.views.pop()
+        top_view = page.views[-1]
+        page.go(top_view.route)
+
+    page.on_route_change = route_change
+    page.on_view_pop = view_pop
+    page.go(page.route)
+
+   
+    
+
+    page.update()
+
+ft.app(target=main)
